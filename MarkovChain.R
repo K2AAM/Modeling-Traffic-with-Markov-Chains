@@ -80,6 +80,18 @@ traffic_plot <- ggplot(traffic_df, aes(x = Time, y = Probability, color = State,
   theme(legend.position = "top",  # Place the legend at the top of the plot
         plot.title = element_text(hjust = 0.5))  # Center-align the plot title
 
+# Add steady state lines to the plot
+traffic_plot <- traffic_plot +
+  geom_segment(aes(x = 8, xend = 16, y = steady_state_early[1,1], yend = steady_state_early[1,1], color = "Light"), linetype = "dashed") + # Light - Early
+  geom_segment(aes(x = 8, xend = 16, y = steady_state_early[2,1], yend = steady_state_early[2,1], color = "Heavy"), linetype = "dashed") + # Heavy - Early
+  geom_segment(aes(x = 8, xend = 16, y = steady_state_early[3,1], yend = steady_state_early[3,1], color = "Gridlock"), linetype = "dashed") + # Gridlock - Early
+  geom_segment(aes(x = 16, xend = 18, y = steady_state_rush_hour[1,1], yend = steady_state_rush_hour[1,1], color = "Light"), linetype = "dashed") + # Light - Rush Hour
+  geom_segment(aes(x = 16, xend = 18, y = steady_state_rush_hour[2,1], yend = steady_state_rush_hour[2,1], color = "Heavy"), linetype = "dashed") + # Heavy - Rush Hour
+  geom_segment(aes(x = 16, xend = 18, y = steady_state_rush_hour[3,1], yend = steady_state_rush_hour[3,1], color = "Gridlock"), linetype = "dashed") + # Gridlock - Rush Hour
+  geom_segment(aes(x = 18, xend = 20, y = steady_state_late[1,1], yend = steady_state_late[1,1], color = "Light"), linetype = "dashed") + # Light - Late
+  geom_segment(aes(x = 18, xend = 20, y = steady_state_late[2,1], yend = steady_state_late[2,1], color = "Heavy"), linetype = "dashed") + # Heavy - Late
+  geom_segment(aes(x = 18, xend = 20, y = steady_state_late[3,1], yend = steady_state_late[3,1], color = "Gridlock"), linetype = "dashed")   # Gridlock - Late
+
 # Save the plot, VSC doesn't like to populate them
 ggsave("traffic_plot.png", plot = traffic_plot)
 
