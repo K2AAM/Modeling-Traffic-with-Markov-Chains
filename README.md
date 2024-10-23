@@ -44,7 +44,7 @@ The transition matrices for each time period are as follows:
 
 ## Code Overview
 
-This project was implemented using R, and the following libraries are required:
+This project was created using R, and the following libraries are required:
 
 - `ggplot2`: Used for creating visualizations.
 - `markovchain`: Used for working with Markov chains.
@@ -172,7 +172,7 @@ ggsave("traffic_plot_improved_v4.png", plot = traffic_plot)
 
 ## How to Interpret the Plot
 
-![Traffic Plot Improved V4](traffic_plot_improved_v4.png)
+![Traffic Plot Improved V4](traffic_plot.png)
 
 The plot (`traffic_plot_improved_v4.png`) shows how the probabilities of "Light", "Heavy", and "Gridlock" traffic change throughout the day. The solid lines represent the simulation results, while the dashed lines indicate the steady-state probabilities for each time period.
 
