@@ -184,7 +184,11 @@ ggsave("traffic_plot_improved_v4.png", plot = traffic_plot)
 
 ```
 
+
 ## How to Interpret the Plot
+
+![Traffic Plot Improved V4](traffic_plot_improved_v4.png)
+
 
 The plot (`traffic_plot_improved_v4.png`) shows how the probabilities of "Light", "Heavy", and "Gridlock" traffic change throughout the day. The solid lines represent the simulation results, while the dashed lines indicate the steady-state probabilities for each time period.
 
