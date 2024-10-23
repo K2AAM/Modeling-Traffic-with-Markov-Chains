@@ -4,7 +4,28 @@ This project answers the following question using Markov chains in R:
 
 > Remembering the Markov Chains that we simulated in class, we built a Markov Chain transition matrix, and then applied that repeatedly in order to generate an array that held the probabilities over time. For this exercise, we will apply different transition matrices at different points in time to model traffic. We have transition matrices for early (8 am to 4 pm), rush hour (4 pm to 6 pm), and late (6 pm to 8 pm). The three states are "Light", "Heavy", and "Gridlock". Simulate this system from 8 am to 8 pm, in 10 minute increments. Set the initial state to 100% probability that traffic is "Light". Plot the results so that you have a working legend (linetypes and colors match the data). Make it as readable as possible. In each "steady state region", what are the probabilities for each state?
 >
-> # Modeling Traffic with Markov Chains This project answers the following question using Markov chains in R: > Remembering the Markov Chains that we simulated in class, we built a Markov Chain transition matrix, and then applied that repeatedly in order to generate an array that held the probabilities over time. For this exercise, we will apply different transition matrices at different points in time to model traffic. We have transition matrices for early (8 am to 4 pm), rush hour (4 pm to 6 pm), and late (6 pm to 8 pm). The three states are "Light", "Heavy", and "Gridlock". Simulate this system from 8 am to 8 pm, in 10 minute increments. Set the initial state to 100% probability that traffic is "Light". Plot the results so that you have a working legend (linetypes and colors match the data). Make it as readable as possible. In each "steady state region", what are the probabilities for each state? > > $$ > \begin{aligned} > &\text{Early Transition Matrix (8 am to 4 pm)} = > \begin{bmatrix} > 0.4 & 0.4 & 0.2 \\ > 0.3 & 0.5 & 0.2 \\ > 0.0 & 0.1 & 0.9 > \end{bmatrix} \\ > &\text{Rush Hour Transition Matrix (4 pm to 6 pm)} = > \begin{bmatrix} > 0.1 & 0.5 & 0.4 \\ > 0.1 & 0.3 & 0.6 \\ > 0.0 & 0.1 & 0.9 > \end{bmatrix} \\ > &\text{Late Transition Matrix (6 pm to 8 pm)} = > \begin{bmatrix} > 0.6 & 0.3 & 0.1 \\ > 0.4 & 0.4 & 0.2 \\ > 0.2 & 0.4 & 0.4 > \end{bmatrix} > \end{aligned} > $$
+> $$
+> \begin{aligned}
+> &\text{Early Transition Matrix (8 am to 4 pm)} = 
+> \begin{bmatrix}
+> 0.4 & 0.4 & 0.2 \\
+> 0.3 & 0.5 & 0.2 \\
+> 0.0 & 0.1 & 0.9 
+> \end{bmatrix} \\
+> &\text{Rush Hour Transition Matrix (4 pm to 6 pm)} = 
+> \begin{bmatrix}
+> 0.1 & 0.5 & 0.4 \\
+> 0.1 & 0.3 & 0.6 \\
+> 0.0 & 0.1 & 0.9 
+> \end{bmatrix} \\
+> &\text{Late Transition Matrix (6 pm to 8 pm)} = 
+> \begin{bmatrix}
+> 0.6 & 0.3 & 0.1 \\
+> 0.4 & 0.4 & 0.2 \\
+> 0.2 & 0.4 & 0.4 
+> \end{bmatrix}
+> \end{aligned}
+> $$
 
 ## Code Breakdown
 
