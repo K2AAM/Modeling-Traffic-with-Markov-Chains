@@ -4,24 +4,24 @@ library(markovchain)
 # Transition matrices 
 # Early period transition matrix (8am to 4pm)
 early_chain <- new("markovchain", states = c("Light", "Heavy", "Gridlock"),
-                  transitionMatrix = matrix(c(0.4, 0.4, 0.2,
-                                             0.3, 0.5, 0.2,
-                                             0.0, 0.1, 0.9),
-                                           nrow = 3, byrow = TRUE))
+                   transitionMatrix = matrix(c(0.4, 0.4, 0.2,
+                                               0.3, 0.5, 0.2,
+                                               0.0, 0.1, 0.9),
+                                             nrow = 3, byrow = TRUE))
 
 # Rush hour period transition matrix (4pm to 6pm)
 rush_hour_chain <- new("markovchain", states = c("Light", "Heavy", "Gridlock"),
-                      transitionMatrix = matrix(c(0.1, 0.5, 0.4,
-                                                 0.1, 0.3, 0.6,
-                                                 0.0, 0.1, 0.9),
-                                               nrow = 3, byrow = TRUE))
+                       transitionMatrix = matrix(c(0.1, 0.5, 0.4,
+                                                   0.1, 0.3, 0.6,
+                                                   0.0, 0.1, 0.9),
+                                                 nrow = 3, byrow = TRUE))
 
 # Late period transition matrix (6pm to 8pm)
 late_chain <- new("markovchain", states = c("Light", "Heavy", "Gridlock"),
-                 transitionMatrix = matrix(c(0.6, 0.3, 0.1,
-                                            0.4, 0.4, 0.2,
-                                            0.2, 0.4, 0.4),
-                                          nrow = 3, byrow = TRUE))
+                  transitionMatrix = matrix(c(0.6, 0.3, 0.1,
+                                              0.4, 0.4, 0.2,
+                                              0.2, 0.4, 0.4),
+                                            nrow = 3, byrow = TRUE))
 
 # Define initial state probabilities. Assume starting with light traffic)
 # Light = 1, Heavy and Gridlock are 0
@@ -69,31 +69,57 @@ print(steady_state_late)
 
 # Plot the results
 # Time = X-axis, Probability on Y-axis
-traffic_plot <- ggplot(traffic_df, aes(x = Time, y = Probability, color = State, linetype = State)) +  
-  geom_line(linewidth = 1) +  # Plot lines with specified linewidth
+traffic_plot <- ggplot(traffic_df, aes(x = Time, y = Probability, color = State, linetype = "Simulation")) +  
+  geom_line(linewidth = 1.2) +  # Plot lines with specified linewidth for better visibility
   labs(title = "Traffic State Probabilities from 8 am to 8 pm",  # Set the plot title
        x = "Time (hours)",  
        y = "Probability",  
        color = "Traffic State", 
-       linetype = "Traffic State") + 
+       linetype = "Line Type") + 
+  scale_color_manual(values = c("red", "green", "blue")) + # Set custom colors for the states
   theme_minimal() +  # Use a minimal theme for the plot
   theme(legend.position = "top",  # Place the legend at the top of the plot
         plot.title = element_text(hjust = 0.5))  # Center-align the plot title
 
-# Add steady state lines to the plot
+# Add steady state lines to the plot using annotate with a distinct line type and thinner line
 traffic_plot <- traffic_plot +
-  geom_segment(aes(x = 8, xend = 16, y = steady_state_early[1,1], yend = steady_state_early[1,1], color = "Light"), linetype = "dashed") + # Light - Early
-  geom_segment(aes(x = 8, xend = 16, y = steady_state_early[2,1], yend = steady_state_early[2,1], color = "Heavy"), linetype = "dashed") + # Heavy - Early
-  geom_segment(aes(x = 8, xend = 16, y = steady_state_early[3,1], yend = steady_state_early[3,1], color = "Gridlock"), linetype = "dashed") + # Gridlock - Early
-  geom_segment(aes(x = 16, xend = 18, y = steady_state_rush_hour[1,1], yend = steady_state_rush_hour[1,1], color = "Light"), linetype = "dashed") + # Light - Rush Hour
-  geom_segment(aes(x = 16, xend = 18, y = steady_state_rush_hour[2,1], yend = steady_state_rush_hour[2,1], color = "Heavy"), linetype = "dashed") + # Heavy - Rush Hour
-  geom_segment(aes(x = 16, xend = 18, y = steady_state_rush_hour[3,1], yend = steady_state_rush_hour[3,1], color = "Gridlock"), linetype = "dashed") + # Gridlock - Rush Hour
-  geom_segment(aes(x = 18, xend = 20, y = steady_state_late[1,1], yend = steady_state_late[1,1], color = "Light"), linetype = "dashed") + # Light - Late
-  geom_segment(aes(x = 18, xend = 20, y = steady_state_late[2,1], yend = steady_state_late[2,1], color = "Heavy"), linetype = "dashed") + # Heavy - Late
-  geom_segment(aes(x = 18, xend = 20, y = steady_state_late[3,1], yend = steady_state_late[3,1], color = "Gridlock"), linetype = "dashed")   # Gridlock - Late
+  # Early period steady state
+  annotate("segment", x = 8, xend = 16, y = steady_state_early[1], yend = steady_state_early[1],
+           color = "black", linetype = "dashed", linewidth = 0.8) + 
+  annotate("segment", x = 8, xend = 16, y = steady_state_early[2], yend = steady_state_early[2],
+           color = "darkgray", linetype = "dashed", linewidth = 0.8) + 
+  annotate("segment", x = 8, xend = 16, y = steady_state_early[3], yend = steady_state_early[3],
+           color = "gray", linetype = "dashed", linewidth = 0.8) + 
+  
+  # Rush hour steady state
+  annotate("segment", x = 16, xend = 18, y = steady_state_rush_hour[1], yend = steady_state_rush_hour[1],
+           color = "purple", linetype = "dashed", linewidth = 0.8) + 
+  annotate("segment", x = 16, xend = 18, y = steady_state_rush_hour[2], yend = steady_state_rush_hour[2],
+           color = "darkblue", linetype = "dashed", linewidth = 0.8) +
+  annotate("segment", x = 16, xend = 18, y = steady_state_rush_hour[3], yend = steady_state_rush_hour[3],
+           color = "lightblue", linetype = "dashed", linewidth = 0.8) + 
+  
+  # Late period steady state
+  annotate("segment", x = 18, xend = 20, y = steady_state_late[1], yend = steady_state_late[1],
+           color = "brown", linetype = "dashed", linewidth = 0.8) + 
+  annotate("segment", x = 18, xend = 20, y = steady_state_late[2], yend = steady_state_late[2],
+           color = "orange", linetype = "dashed", linewidth = 0.8) + 
+  annotate("segment", x = 18, xend = 20, y = steady_state_late[3], yend = steady_state_late[3],
+           color = "yellow", linetype = "dashed", linewidth = 0.8)
 
-# Save the plot, VSC doesn't like to populate them
-ggsave("traffic_plot.png", plot = traffic_plot)
+# Add annotations for steady state lines to differentiate from simulation
+traffic_plot <- traffic_plot +
+  annotate("text", x = 12, y = steady_state_early[1] + 0.05, label = "Steady State Early - Light", color = "black", size = 3, angle = 0) +
+  annotate("text", x = 12, y = steady_state_early[2] + 0.05, label = "Steady State Early - Heavy", color = "darkgray", size = 3, angle = 0) +
+  annotate("text", x = 12, y = steady_state_early[3] - 0.05, label = "Steady State Early - Gridlock", color = "gray", size = 3, angle = 0) +
+  
+  annotate("text", x = 17, y = steady_state_rush_hour[1] + 0.05, label = "Steady State Rush Hour - Light", color = "purple", size = 3, angle = 0) +
+  annotate("text", x = 17, y = steady_state_rush_hour[2] + 0.05, label = "Steady State Rush Hour - Heavy", color = "darkblue", size = 3, angle = 0) +
+  annotate("text", x = 17, y = steady_state_rush_hour[3] - 0.05, label = "Steady State Rush Hour - Gridlock", color = "lightblue", size = 3, angle = 0) +
+  
+  annotate("text", x = 19, y = steady_state_late[1] + 0.05, label = "Steady State Late - Light", color = "brown", size = 3, angle = 0) +
+  annotate("text", x = 19, y = steady_state_late[2] + 0.05, label = "Steady State Late - Heavy", color = "orange", size = 3, angle = 0) +
+  annotate("text", x = 19, y = steady_state_late[3] - 0.05, label = "Steady State Late - Gridlock", color = "yellow", size = 3, angle = 0)
 
-
-
+# Save the improved plot
+ggsave("traffic_plot_improved_v4.png", plot = traffic_plot)
