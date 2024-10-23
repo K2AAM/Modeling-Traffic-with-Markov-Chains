@@ -1,58 +1,66 @@
 # Modeling Traffic with Markov Chains
 
-This project answers the following question using Markov chains in R:
+This project uses Markov chains to simulate traffic conditions at different times of the day, considering three states: "Light", "Heavy", and "Gridlock". The simulation spans from 8 am to 8 pm, using distinct transition matrices for different periods:
 
-> Remembering the Markov Chains that we simulated in class, we built a Markov Chain transition matrix, and then applied that repeatedly in order to generate an array that held the probabilities over time. For this exercise, we will apply different transition matrices at different points in time to model traffic. We have transition matrices for early (8 am to 4 pm), rush hour (4 pm to 6 pm), and late (6 pm to 8 pm). The three states are "Light", "Heavy", and "Gridlock". Simulate this system from 8 am to 8 pm, in 10 minute increments. Set the initial state to 100% probability that traffic is "Light". Plot the results so that you have a working legend (linetypes and colors match the data). Make it as readable as possible. In each "steady state region", what are the probabilities for each state?
->
-> $$
-> \begin{aligned}
-> &\text{Early Transition Matrix (8 am to 4 pm)} = 
-> \begin{bmatrix}
-> 0.4 & 0.4 & 0.2 \\
-> 0.3 & 0.5 & 0.2 \\
-> 0.0 & 0.1 & 0.9 
-> \end{bmatrix} \\
-> &\text{Rush Hour Transition Matrix (4 pm to 6 pm)} = 
-> \begin{bmatrix}
-> 0.1 & 0.5 & 0.4 \\
-> 0.1 & 0.3 & 0.6 \\
-> 0.0 & 0.1 & 0.9 
-> \end{bmatrix} \\
-> &\text{Late Transition Matrix (6 pm to 8 pm)} = 
-> \begin{bmatrix}
-> 0.6 & 0.3 & 0.1 \\
-> 0.4 & 0.4 & 0.2 \\
-> 0.2 & 0.4 & 0.4 
-> \end{bmatrix}
-> \end{aligned}
-> $$
+- **Early Period (8 am - 4 pm)**: Light traffic, transitions likely to remain less congested.
+- **Rush Hour (4 pm - 6 pm)**: Increased likelihood of moving to "Heavy" or "Gridlock".
+- **Late Period (6 pm - 8 pm)**: Traffic eases up as the evening progresses.
 
-## Code Breakdown
+The goal is to observe how the probabilities of each traffic state evolve over time, starting with an initial state of 100% probability of "Light" traffic.
 
-Here's a line-by-line explanation of the R code used to solve this problem:
+## Transition Matrices
 
-**1. Load Libraries**
+The transition matrices for each time period are as follows:
 
-```R
-library(ggplot2)  # For creating visualizations
-library(markovchain)  # For working with Markov chains
+**Early Period (8 am to 4 pm)**:
 
-```
+\[
+\begin{bmatrix}
+0.4 & 0.4 & 0.2 \\
+0.3 & 0.5 & 0.2 \\
+0.0 & 0.1 & 0.9
+\end{bmatrix}
+\]
 
-**2. Define Transition Matrices**
+**Rush Hour Period (4 pm to 6 pm)**:
 
-These matrices represent the probabilities of transitioning between different traffic states ("Light", "Heavy", "Gridlock") during different times of the day.
+\[
+\begin{bmatrix}
+0.1 & 0.5 & 0.4 \\
+0.1 & 0.3 & 0.6 \\
+0.0 & 0.1 & 0.9
+\end{bmatrix}
+\]
 
-Code snippet
+**Late Period (6 pm to 8 pm)**:
 
-```
+\[
+\begin{bmatrix}
+0.6 & 0.3 & 0.1 \\
+0.4 & 0.4 & 0.2 \\
+0.2 & 0.4 & 0.4
+\end{bmatrix}
+\]
+
+## Code Overview
+
+This project was implemented using R, and the following libraries are required:
+
+- `ggplot2`: Used for creating visualizations.
+- `markovchain`: Used for working with Markov chains.
+
+### 1. Define Transition Matrices
+
+Transition matrices are defined to represent the probabilities of transitioning between different traffic states ("Light", "Heavy", "Gridlock") during different times of the day.
+
+```r
 # Early period (8 am to 4 pm)
 early_chain <- new("markovchain", 
                    states = c("Light", "Heavy", "Gridlock"),
                    transitionMatrix = matrix(c(0.4, 0.4, 0.2,  # From Light
                                                0.3, 0.5, 0.2,  # From Heavy
                                                0.0, 0.1, 0.9), # From Gridlock
-                                             nrow = 3, byrow = TRUE)) 
+                                             nrow = 3, byrow = TRUE))
 
 # Rush hour period (4 pm to 6 pm)
 rush_hour_chain <- new("markovchain", 
@@ -69,40 +77,33 @@ late_chain <- new("markovchain",
                                               0.4, 0.4, 0.2,
                                               0.2, 0.4, 0.4),
                                             nrow = 3, byrow = TRUE))
-
 ```
 
-**3. Set Initial State**
+### 2. Set Initial State
 
 We start the simulation with the assumption that traffic is "Light" with 100% probability.
 
-Code snippet
-
-```
+```r
 initial_state <- c(1, 0, 0)   # 100% probability of "Light" traffic
-names(initial_state) <- c("Light", "Heavy", "Gridlock") 
-
+names(initial_state) <- c("Light", "Heavy", "Gridlock")
 ```
 
-**4. Simulation Parameters**
+### 3. Simulation Parameters
 
-Code snippet
+We set up the parameters for a simulation spanning from 8 am to 8 pm in 10-minute increments (72 time steps).
 
-```
+```r
 time_steps <- 72   # 72 time steps (10-minute increments from 8 am to 8 pm)
 state_probabilities <- matrix(0, nrow = time_steps, ncol = 3)  # To store results
 state_probabilities[1, ] <- initial_state  # Set initial probabilities
 colnames(state_probabilities) <- c("Light", "Heavy", "Gridlock")
-
 ```
 
-**5. Simulate Traffic Flow**
+### 4. Simulate Traffic Flow
 
 This loop iterates through each time step, applying the appropriate transition matrix to calculate the probabilities of each traffic state.
 
-Code snippet
-
-```
+```r
 for (t in 2:time_steps) { 
   if (t <= 48) {  # Early period (8 am to 4 pm)
     state_probabilities[t, ] <- initial_state %*% early_chain@transitionMatrix 
@@ -113,38 +114,27 @@ for (t in 2:time_steps) {
   }
   initial_state <- state_probabilities[t, ] # Update for the next time step
 }
-
 ```
 
-**6. Prepare Data for Plotting**
+### 5. Prepare Data for Plotting
 
-Code snippet
+The results are then converted to a data frame for easy plotting using `ggplot2`.
 
-```
-traffic_df <- data.frame( 
+```r
+traffic_df <- data.frame(
   Time = rep(seq(from = 8, to = 20, length.out = time_steps), each = 3), 
   State = factor(rep(c("Light", "Heavy", "Gridlock"), times = time_steps)),
-  Probability = as.vector(t(state_probabilities)) 
+  Probability = as.vector(t(state_probabilities))
 )
-
 ```
 
-**7. Calculate Steady State Probabilities**
+### 6. Calculate and Print Steady State Probabilities
 
-Code snippet
-
-```
+```r
 steady_state_early <- steadyStates(early_chain)
 steady_state_rush_hour <- steadyStates(rush_hour_chain)
 steady_state_late <- steadyStates(late_chain)
 
-```
-
-**8. Print Steady State Probabilities**
-
-Code snippet
-
-```
 print("Steady State Probabilities for Early Period (8 am to 4 pm):")
 print(steady_state_early)
 
@@ -153,16 +143,13 @@ print(steady_state_rush_hour)
 
 print("Steady State Probabilities for Late Period (6 pm to 8 pm):")
 print(steady_state_late)
-
 ```
 
-**9. Visualize the Results**
+### 7. Visualize the Results
 
-This section uses `ggplot2` to create a line graph showing the probabilities of each traffic state over time.
+This section uses `ggplot2` to create a line graph showing the probabilities of each traffic state over time, along with dashed lines indicating the steady-state probabilities.
 
-Code snippet
-
-```
+```r
 # Basic plot
 traffic_plot <- ggplot(traffic_df, aes(x = Time, y = Probability, color = State, linetype = "Simulation")) +
   geom_line(linewidth = 1.2) + 
@@ -180,23 +167,19 @@ traffic_plot <- ggplot(traffic_df, aes(x = Time, y = Probability, color = State,
 # ... (code for adding lines and annotations - see previous responses) ...
 
 # Save the plot
-ggsave("traffic_plot_improved_v4.png", plot = traffic_plot) 
-
+ggsave("traffic_plot_improved_v4.png", plot = traffic_plot)
 ```
-
 
 ## How to Interpret the Plot
 
 ![Traffic Plot Improved V4](traffic_plot_improved_v4.png)
 
-
 The plot (`traffic_plot_improved_v4.png`) shows how the probabilities of "Light", "Heavy", and "Gridlock" traffic change throughout the day. The solid lines represent the simulation results, while the dashed lines indicate the steady-state probabilities for each time period.
 
 ## Key Findings
 
--   **Early Period (8 am - 4 pm):** The probability of "Light" traffic is highest during this period, but there's still a chance of encountering "Heavy" or "Gridlock" traffic.
--   **Rush Hour (4 pm - 6 pm):** As expected, the probability of "Heavy" and "Gridlock" traffic increases significantly during rush hour.
--   **Late Period (6 pm - 8 pm):** Traffic conditions gradually improve, with the probability of "Light" traffic increasing again.
--   **Steady States:** The dashed lines show the long-term probabilities of each state within each time period. Notice how the probabilities tend to stabilize towards these steady states over time.
+- **Early Period (8 am - 4 pm)**: The probability of "Light" traffic is highest during this period, but there's still a chance of encountering "Heavy" or "Gridlock" traffic.
+- **Rush Hour (4 pm - 6 pm)**: As expected, the probability of "Heavy" and "Gridlock" traffic increases significantly during rush hour.
+- **Late Period (6 pm - 8 pm)**: Traffic conditions gradually improve, with the probability of "Light" traffic increasing again.
+- **Steady States**: The dashed lines show the long-term probabilities of each state within each time period. Notice how the probabilities tend to stabilize towards these steady states over time.
 
-This analysis provides a visual and quantitative understanding of traffic flow dynamics throughout the day.
