@@ -109,3 +109,7 @@ traffic_plot <- traffic_plot +
 
 # Save the plot
 ggsave("traffic_plot.png", plot = traffic_plot, bg = "white")
+
+# Export Data to CSV file
+write.csv(traffic_df, "traffic_simulation.csv", row.names = FALSE)
+
