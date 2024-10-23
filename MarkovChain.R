@@ -39,11 +39,16 @@ for (t in 2:time_steps) {
   initial_state <- state_probabilities[t, ]  
 }
 
+# Create a time sequence from 8 to 20 with 72 steps
+Time <- seq(from = 8, to = 20, length.out = time_steps)
+
+# Adjust the data frame creation to use the correct Time values
 traffic_df <- data.frame(
-  Time = rep(seq(from = 8, to = 20, length.out = time_steps), each = 3),  
+  Time = rep(Time, each = 3),  # Corrected Time sequence from 8 to 20 hours
   State = factor(rep(c("Light", "Heavy", "Gridlock"), times = time_steps)),
   Probability = as.vector(t(state_probabilities))  
 )
+
 
 steady_state_early <- steadyStates(early_chain)
 steady_state_rush_hour <- steadyStates(rush_hour_chain)
@@ -57,6 +62,7 @@ traffic_plot <- ggplot(traffic_df, aes(x = Time, y = Probability, color = State)
        y = "Probability",  
        color = "Traffic State") + 
   scale_color_manual(values = c("red", "green", "blue")) + 
+  scale_x_continuous(limits = c(8, 20), breaks = seq(8, 20, by = 1)) +  # Set x-axis limits and breaks
   theme_minimal() +  
   theme(legend.position = "top",  
         plot.title = element_text(hjust = 0.5),
