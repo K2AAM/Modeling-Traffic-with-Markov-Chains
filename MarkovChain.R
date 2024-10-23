@@ -79,7 +79,9 @@ traffic_plot <- ggplot(traffic_df, aes(x = Time, y = Probability, color = State,
   scale_color_manual(values = c("red", "green", "blue")) + # Set custom colors for the states
   theme_minimal() +  # Use a minimal theme for the plot
   theme(legend.position = "top",  # Place the legend at the top of the plot
-        plot.title = element_text(hjust = 0.5))  # Center-align the plot title
+        plot.title = element_text(hjust = 0.5),
+        plot.background = element_rect(fill = "white", color = NA), # Set the plot background to white
+        panel.background = element_rect(fill = "white", color = NA)) # Set the panel background to white
 
 # Add steady state lines to the plot using annotate with a distinct line type and thinner line
 traffic_plot <- traffic_plot +
@@ -122,4 +124,4 @@ traffic_plot <- traffic_plot +
   annotate("text", x = 19, y = steady_state_late[3] - 0.05, label = "Steady State Late - Gridlock", color = "yellow", size = 3, angle = 0)
 
 # Save the improved plot
-ggsave("traffic_plot_improved_v4.png", plot = traffic_plot)
+ggsave("traffic_plot_improved_v4.png", plot = traffic_plot, bg = "white")
