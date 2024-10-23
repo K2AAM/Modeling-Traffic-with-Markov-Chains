@@ -176,6 +176,122 @@ ggsave("traffic_plot_improved_v4.png", plot = traffic_plot)
 
 The plot (`traffic_plot_improved_v4.png`) shows how the probabilities of "Light", "Heavy", and "Gridlock" traffic change throughout the day. The solid lines represent the simulation results, while the dashed lines indicate the steady-state probabilities for each time period.
 
+New Functionality: PDF Report Generation
+
+The project now includes a feature to automatically generate a PDF report that summarizes the results of the traffic simulation. This report includes:
+
+    Average probabilities of each traffic state during the early, rush hour, and late periods.
+    A plot that visualizes how the probabilities of "Light," "Heavy," and "Gridlock" traffic evolve throughout the day.
+    Steady-state probabilities for each time period, indicating the long-term probabilities for each traffic state.
+
+Dependencies for PDF Generation
+
+The new functionality requires:
+
+    Python Libraries:
+        pandas: For data manipulation.
+        matplotlib: For plotting the simulation results.
+        jinja2: For rendering the HTML report.
+        pdfkit: For converting HTML to PDF.
+    System Dependency:
+        wkhtmltopdf: A tool used by pdfkit to convert HTML files to PDF format. It must be installed on the system and accessible via the command line.
+
+How to Run the Simulation and Generate the Report
+
+    Run the Traffic Simulation Script
+    The script simulates traffic flow from 8 am to 8 pm in 10-minute increments (72 steps) using R. The results are then saved to a CSV file, traffic_simulation.csv.
+
+    Generate the PDF Report Using Python
+    Run the Python script to analyze the simulation results, generate plots, and create the PDF report:
+
+    bash
+
+    python3 pdf_generation_script.py
+
+    The script will:
+        Load the data from traffic_simulation.csv.
+        Calculate the average probability for each state ("Light," "Heavy," "Gridlock") across three periods: Early, Rush Hour, and Late.
+        Visualize the traffic state probabilities over time and save the plot as traffic_probabilities_plot.png.
+        Render the HTML report using jinja2 and convert it to a PDF named traffic_simulation_report.pdf.
+
+Example Report Output
+
+The generated PDF report (traffic_simulation_report.pdf) includes:
+
+    Average Probabilities for Each Period:
+        Displays the average probabilities of being in "Light," "Heavy," or "Gridlock" traffic for the early, rush hour, and late periods.
+    Traffic State Probabilities Plot:
+        Shows how the probabilities for each state change from 8 am to 8 pm.
+        Steady-state probabilities are included as dashed lines on the plot, indicating long-term traffic behavior for each period.
+
+Transition Matrices
+
+The transition matrices for each period are as follows:
+
+Early Period (8 am to 4 pm):
+[0.40.40.20.30.50.20.00.10.9]
+​0.40.30.0​0.40.50.1​0.20.20.9​
+​
+
+Rush Hour Period (4 pm to 6 pm):
+[0.10.50.40.10.30.60.00.10.9]
+​0.10.10.0​0.50.30.1​0.40.60.9​
+​
+
+Late Period (6 pm to 8 pm):
+[0.60.30.10.40.40.20.20.40.4]
+​0.60.40.2​0.30.40.4​0.10.20.4​
+​
+## Key Code Updates
+
+    PDF Report Generation
+    The Python script now includes code to generate a PDF report. It uses pdfkit to convert an HTML report (rendered with jinja2) into a PDF file. The report includes:
+        Average probabilities for "Light," "Heavy," and "Gridlock" traffic during each time period.
+        A plot that visualizes traffic state probabilities over time, saved as an image and embedded in the PDF.
+
+    Data Analysis in Python
+    The Python script reads the CSV file generated from the R simulation and performs the following steps:
+        Calculates average probabilities for each state in each period.
+        Visualizes the probabilities over time using matplotlib.
+        Saves the visualization as a PNG image (traffic_probabilities_plot.png).
+        Generates an HTML report and converts it to a PDF.
+
+## Running the Project
+
+    Install Dependencies
+    Ensure the following Python packages are installed:
+
+    bash
+
+pip install pandas matplotlib jinja2 pdfkit
+
+Make sure wkhtmltopdf is installed on the system:
+
+bash
+
+# Ubuntu/Debian
+sudo apt install wkhtmltopdf
+
+# macOS (via Homebrew)
+brew install wkhtmltopdf
+
+Run the R Simulation Script
+Execute the R script to generate the traffic_simulation.csv file:
+
+bash
+
+Rscript traffic_simulation.R
+
+Generate the PDF Report with Python
+Run the Python script to create the report:
+
+bash
+
+python3 pdf_generation_script.py
+
+Review the Output
+The generated PDF report (traffic_simulation_report.pdf) will be located in the project directory.
+
 ## Key Findings
 
 - **Early Period (8 am - 4 pm)**: The probability of "Light" traffic is highest during this period, but there's still a chance of encountering "Heavy" or "Gridlock" traffic.
