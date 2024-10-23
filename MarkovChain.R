@@ -80,7 +80,7 @@ traffic_plot <- ggplot(traffic_df, aes(x = Time, y = Probability, color = State,
   theme(legend.position = "top",  # Place the legend at the top of the plot
         plot.title = element_text(hjust = 0.5))  # Center-align the plot title
 
-# Display the plot in Visual Studio Code 
+# Save the plot, VSC doesn't like to populate them
 # I am using VSC instead of R studio. Trying to learn how to use, so it's good practice
 ggsave("traffic_plot.png", plot = traffic_plot)
 
