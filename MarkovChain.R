@@ -52,6 +52,21 @@ traffic_df <- data.frame(  # Create a data frame to store the results
   Probability = as.vector(t(state_probabilities))  
 )
 
+# Calculate steady state probabilities for each period
+steady_state_early <- steadyStates(early_chain)
+steady_state_rush_hour <- steadyStates(rush_hour_chain)
+steady_state_late <- steadyStates(late_chain)
+
+# Print the steady state probabilities for each period
+print("Steady State Probabilities for Early Period (8 am to 4 pm):")
+print(steady_state_early)
+
+print("Steady State Probabilities for Rush Hour (4 pm to 6 pm):")
+print(steady_state_rush_hour)
+
+print("Steady State Probabilities for Late Period (6 pm to 8 pm):")
+print(steady_state_late)
+
 # Plot the results
 # Time = X-axis, Probability on Y-axis
 traffic_plot <- ggplot(traffic_df, aes(x = Time, y = Probability, color = State, linetype = State)) +  
@@ -67,4 +82,7 @@ traffic_plot <- ggplot(traffic_df, aes(x = Time, y = Probability, color = State,
 
 # Display the plot in Visual Studio Code 
 # I am using VSC instead of R studio. Trying to learn how to use, so it's good practice
-print(traffic_plot)  
+ggsave("traffic_plot.png", plot = traffic_plot)
+
+
+
