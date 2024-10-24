@@ -110,6 +110,6 @@ traffic_plot <- traffic_plot +
 # Save the plot
 ggsave("traffic_plot.png", plot = traffic_plot, bg = "white")
 
-# Export Data to CSV file
+# Export Data to CSV file for pdf.py to use to generate pdf report
 write.csv(traffic_df, "traffic_simulation.csv", row.names = FALSE)
 
